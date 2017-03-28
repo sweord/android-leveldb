@@ -18,6 +18,7 @@ static jmethodID gByteBuffer_arrayMethodID;
 static jlong
 nativeOpen(JNIEnv* env,
            jclass clazz,
+           jlong maxOpenFiles,
            jstring dbpath)
 {
     static bool gInited;
@@ -41,6 +42,7 @@ nativeOpen(JNIEnv* env,
     leveldb::DB* db;
     leveldb::Options options;
     options.create_if_missing = true;
+    options.max_open_files = maxOpenFiles;
     leveldb::Status status = leveldb::DB::Open(options, path, &db);
     env->ReleaseStringUTFChars(dbpath, path);
 
@@ -257,7 +259,7 @@ nativeDestroy(JNIEnv *env,
 
 static JNINativeMethod sMethods[] =
 {
-        { "nativeOpen", "(Ljava/lang/String;)J", (void*) nativeOpen },
+        { "nativeOpen", "(JLjava/lang/String;)J", (void*) nativeOpen },
         { "nativeClose", "(J)V", (void*) nativeClose },
         { "nativeGet", "(JJ[B)[B", (void*) nativeGet },
         { "nativeGet", "(JJLjava/nio/ByteBuffer;)[B", (void*) nativeGetBB },

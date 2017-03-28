@@ -22,8 +22,8 @@ public class DB extends NativeObject {
         mPath = path;
     }
 
-    public void open() {
-        mPtr = nativeOpen(mPath.getAbsolutePath());
+    public void open(long maxOpenFiles) {
+        mPtr = nativeOpen(maxOpenFiles, mPath.getAbsolutePath());
     }
 
     @Override
@@ -139,7 +139,7 @@ public class DB extends NativeObject {
         nativeDestroy(path.getAbsolutePath());
     }
 
-    private static native long nativeOpen(String dbpath);
+    private static native long nativeOpen(long maxOpenFiles, String dbpath);
 
     private static native void nativeClose(long dbPtr);
 
